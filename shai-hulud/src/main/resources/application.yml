@@ -1,0 +1,8 @@
+logging.level:
+  root: INFO
+#  org.springframework: WARN
+  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger: INFO
+
+
+
+
