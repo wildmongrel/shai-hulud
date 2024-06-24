@@ -1,4 +1,4 @@
-package co.pipat.shai_hulud.feature.proxy;
+package co.pipat.shai_hulud.feature.proxy.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

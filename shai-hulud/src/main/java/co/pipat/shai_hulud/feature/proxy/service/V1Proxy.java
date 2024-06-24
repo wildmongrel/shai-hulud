@@ -1,4 +1,4 @@
-package co.pipat.shai_hulud.feature.proxy;
+package co.pipat.shai_hulud.feature.proxy.service;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;

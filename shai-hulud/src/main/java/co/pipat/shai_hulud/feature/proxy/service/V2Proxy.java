@@ -1,7 +1,6 @@
-package co.pipat.shai_hulud.feature.proxy;
+package co.pipat.shai_hulud.feature.proxy.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -15,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 @Log4j2
-@Service
 public class V2Proxy {
   public void x() {
     try {
