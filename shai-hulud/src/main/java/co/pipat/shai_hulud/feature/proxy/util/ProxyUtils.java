@@ -2,9 +2,10 @@ package co.pipat.shai_hulud.feature.proxy.util;
 
 import co.pipat.shai_hulud.feature.proxy.model.SessionData;
 import com.google.common.net.HttpHeaders;
-import java.io.Closeable;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.Closeable;
 
 @Log4j2
 public class ProxyUtils {
@@ -44,10 +45,10 @@ public class ProxyUtils {
           );
           break;
         default:
-          sessionData.getHeaders().add(
-              headerKey,
-              headerValue
-          );
+//          sessionData.getHeaders().add(
+//              headerKey,
+//              headerValue
+//          );
 
       }
     }

@@ -2,22 +2,20 @@ package co.pipat.shai_hulud.feature.proxy.service;
 
 import co.pipat.shai_hulud.feature.proxy.model.SessionData;
 import co.pipat.shai_hulud.feature.proxy.util.ProxyUtils;
-import com.sun.net.httpserver.Headers;
+import com.google.common.net.HttpHeaders;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.http.HttpHeaders;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 /*
 * [] - Proxy request and response
@@ -25,6 +23,10 @@ import org.springframework.util.ObjectUtils;
 @Log4j2
 @Service
 public class ShProxy {
+  /*
+  * Alice <-> proxy <-> Bob
+  *
+  * */
   public void x() throws IOException {
     ServerSocket serverSocket = new ServerSocket(2777);
     SessionData sessionData = new SessionData();
@@ -38,48 +40,66 @@ public class ShProxy {
 
     String line = null;
     StringBuilder rawRequestBuilder = new StringBuilder();
+    System.out.println("---- Alice -> proxy STARTED ----");
     for(;;){
-//      System.out.println("1");
       line = bufferedReader.readLine();
-//      System.out.println("2");
-      if(rawRequestBuilder.length()!=0){
-        rawRequestBuilder.append(System.lineSeparator());
-      }
+//      if(!ObjectUtils.isEmpty(rawRequestBuilder.length())){
+//        rawRequestBuilder.append(System.lineSeparator());
+//      }
+
       if(ObjectUtils.isEmpty(line)) {
         break;
       }else{
-        ProxyUtils.extractHeader(sessionData,line);
-//        System.out.println("-------->"+line+"<");
+        int colonIndex = line.indexOf(":");
+        if(colonIndex<0){
+          rawRequestBuilder
+                  .append(line)
+                  .append(System.lineSeparator());
+          continue;
+        }
+        String headerKey = line.substring(0,colonIndex);
+//        String headerValue = line.substring(colonIndex+2);
+        switch(headerKey){
+          case HttpHeaders.HOST:
+            rawRequestBuilder
+                    .append("Host: www.google.com")
+                    .append(System.lineSeparator());
+            break;
+          case "Connection":
+            rawRequestBuilder
+                    .append(line)
+//                    .append("Connection: close")
+                    .append(System.lineSeparator());
+            break;
+          default:
+        }
       }
-      rawRequestBuilder.append(line);
-//      System.out.println("3");
     }
+    System.out.println("---- Alice -> proxy ENDED ----");
 
+    System.out.println("---- proxy -> Bob STARTED ----");
     String rawRequest = rawRequestBuilder
         .append(System.lineSeparator())
-        .append(System.lineSeparator())
         .toString();
+    System.out.println(rawRequest);
 
     // forward request to destination
 //    String host = sessionData.getHeaderData().getHeaders().get()
 //    int port = sessionData.getPort();
     String host = "";
     int port = 0;
-    log.info("------------------ Host:Port ----------------");
-    log.info("{}:{}",host,port);
-
+//    log.info("------------------ Host:Port ----------------");
     // Create SSLSocket
     host = "www.google.com";
     port = 443;
+//    log.info("{}:{}",host,port);
     SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
     SSLSocket socket2 = (SSLSocket) factory.createSocket(host, port);
 
-//    Socket socket2 = new Socket("www.google.com",443);
-
     OutputStream outputStream2 = socket2.getOutputStream();
-
     outputStream2.write(rawRequest.getBytes());
     outputStream2.flush();
+    System.out.println("---- proxy -> Bob ENDED ----");
 //    OutputStreamWriter outputStreamWriter2 = new OutputStreamWriter(outputStream2);
 //    BufferedWriter bufferedWriter2 = new BufferedWriter(outputStreamWriter2);
 //
@@ -90,8 +110,7 @@ public class ShProxy {
     InputStreamReader inputStreamReader2 = new InputStreamReader(inputStream2);
     BufferedReader bufferedReader2 = new BufferedReader(inputStreamReader2);
 
-    log.warn("-------------------------");
-
+    System.out.println("---- proxy <- Bob STARTED ----");
     String inputLine;
     while ((inputLine = bufferedReader2.readLine()) != null) {
       log.warn(inputLine);
@@ -114,7 +133,7 @@ public class ShProxy {
 //      rawRequestBuilder2.append(line);
 ////      System.out.println("3");
 //    }
-    log.warn("-------------------------");
+    System.out.println("---- proxy <- Bob ENDED ----");
 //    log.warn(rawRequestBuilder2.toString());
 
 
@@ -129,7 +148,7 @@ public class ShProxy {
         socket2
     );
 
-    log.warn(rawRequestBuilder.toString());
+//    log.warn(rawRequestBuilder.toString());
     
     ProxyUtils.close(
             bufferedReader,

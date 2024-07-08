@@ -1,11 +1,14 @@
 # Read Me First
 
-Version|Changes
----|---
-0.1.0|PoC proxy Google.com
-0.0.0|Initial
+Version|Changes|Status
+---|---|---
+0.2.0|PoC proxy Google.com|WIP
+0.1.0|PoC proxy Google.com|Done
+0.0.0|Initial|Done
 
-* The original package name 'co.pipat.shai-hulud' is invalid and this project uses 'co.pipat.shai_hulud' instead.
+
+
+---
 
 # Getting Started
 ### Reference Documentation
