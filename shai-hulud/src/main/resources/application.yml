@@ -1,8 +1,11 @@
 logging.level:
   root: INFO
 #  org.springframework: WARN
-  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger: INFO
+#  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger: INFO
 
+sh:
+  com:
+    path: "C:/tmp/com"
 
 
 

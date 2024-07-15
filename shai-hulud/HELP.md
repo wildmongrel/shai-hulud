@@ -1,25 +1,49 @@
-# Read Me First
+# Release Notes
 
-Version|Changes|Status
----|---|---
-0.2.0|PoC proxy Google.com|WIP
-0.1.0|PoC proxy Google.com|Done
-0.0.0|Initial|Done
-
-
+Version| Changes                      |Status|Progress
+---|------------------------------|---|---
+0.2.0| PoC 0.1.0 -> show on browser |WIP|Add rs from Proxy to Alice
+0.1.0| PoC Conenct to Google.com    |Done
+0.0.0| Initial                      |Done
 
 ---
 
-# Getting Started
-### Reference Documentation
-For further reference, please consider the following sections:
+## Backlogs
+Tasks| Priority |Size
+---|----------|---
+Continuous use| 3        |3
+Refactor| 2        |1
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.3.0/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.3.0/gradle-plugin/reference/html/#build-image)
+---
 
-### Additional Links
-These additional references should also help you:
+## Diagram
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+```plantuml
+rectangle "Client Network" as clientNet{
+  rectangle "Client Node" as client{
+    rectangle "SH Client" as shClient
+    database "File" as file  
+  }
+ 
+}
 
+cloud Internet as internet{
+}
+
+rectangle "Server Network" as serverNet {
+  rectangle "Server Node" as server{
+      rectangle "RDP Server" as rdpServer
+      rectangle "SH Server" as shServer
+  }
+}
+
+client <--> shClient
+client <--> internet
+shClient <--> file
+
+internet <--> server
+
+rdpServer <--> shServer
+
+'hide @unlinked 
+```

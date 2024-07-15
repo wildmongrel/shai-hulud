@@ -1,5 +1,6 @@
 package co.pipat.shai_hulud.feature.proxy.service;
 
+import co.pipat.shai_hulud.feature.playground.PrettyLog;
 import co.pipat.shai_hulud.feature.proxy.model.SessionData;
 import co.pipat.shai_hulud.feature.proxy.util.ProxyUtils;
 import com.google.common.net.HttpHeaders;
@@ -28,7 +29,7 @@ public class ShProxy {
   *
   * */
   public void x() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(2777);
+    ServerSocket serverSocket = new ServerSocket(443);
     SessionData sessionData = new SessionData();
 
     // wait for incoming request
@@ -40,7 +41,7 @@ public class ShProxy {
 
     String line = null;
     StringBuilder rawRequestBuilder = new StringBuilder();
-    System.out.println("---- Alice -> proxy STARTED ----");
+    PrettyLog.right("STARTED","A","Proxy");
     for(;;){
       line = bufferedReader.readLine();
 //      if(!ObjectUtils.isEmpty(rawRequestBuilder.length())){
@@ -75,9 +76,9 @@ public class ShProxy {
         }
       }
     }
-    System.out.println("---- Alice -> proxy ENDED ----");
+    PrettyLog.right("ENDED","A","Proxy");
 
-    System.out.println("---- proxy -> Bob STARTED ----");
+    PrettyLog.right("STARTED","Proxy","Bob");
     String rawRequest = rawRequestBuilder
         .append(System.lineSeparator())
         .toString();
@@ -99,7 +100,7 @@ public class ShProxy {
     OutputStream outputStream2 = socket2.getOutputStream();
     outputStream2.write(rawRequest.getBytes());
     outputStream2.flush();
-    System.out.println("---- proxy -> Bob ENDED ----");
+    PrettyLog.right("ENDED","Proxy","Bob");
 //    OutputStreamWriter outputStreamWriter2 = new OutputStreamWriter(outputStream2);
 //    BufferedWriter bufferedWriter2 = new BufferedWriter(outputStreamWriter2);
 //
@@ -110,7 +111,7 @@ public class ShProxy {
     InputStreamReader inputStreamReader2 = new InputStreamReader(inputStream2);
     BufferedReader bufferedReader2 = new BufferedReader(inputStreamReader2);
 
-    System.out.println("---- proxy <- Bob STARTED ----");
+    PrettyLog.left("STARTED","Proxy","Bob");
     String inputLine;
     while ((inputLine = bufferedReader2.readLine()) != null) {
       log.warn(inputLine);
@@ -133,7 +134,7 @@ public class ShProxy {
 //      rawRequestBuilder2.append(line);
 ////      System.out.println("3");
 //    }
-    System.out.println("---- proxy <- Bob ENDED ----");
+    PrettyLog.left("ENDED","Proxy","Bob");
 //    log.warn(rawRequestBuilder2.toString());
 
 
